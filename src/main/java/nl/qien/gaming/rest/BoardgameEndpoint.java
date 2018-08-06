@@ -5,6 +5,9 @@ import nl.qien.gaming.domain.Boardgame;
 import nl.qien.gaming.domain.Player;
 import nl.qien.gaming.messages.Message;
 import nl.qien.gaming.persistence.BoardgameRepository;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +15,7 @@ import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.util.Optional;
 
 @Component
@@ -40,6 +44,17 @@ public class BoardgameEndpoint {
         else {
           return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    @GET
+    @Path("docx")
+    public void generateDocxFile() throws Docx4JException {
+        WordprocessingMLPackage wordPackage = WordprocessingMLPackage.createPackage();
+        MainDocumentPart mainDocumentPart = wordPackage.getMainDocumentPart();
+        mainDocumentPart.addStyledParagraphOfText("Title", "Hello World!");
+        mainDocumentPart.addParagraphOfText("Welcome To Baeldung");
+        File exportFile = new File("welcome.docx");
+        wordPackage.save(exportFile);
     }
 
     @POST
