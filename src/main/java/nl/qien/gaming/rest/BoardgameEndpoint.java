@@ -5,19 +5,21 @@ import nl.qien.gaming.domain.Boardgame;
 import nl.qien.gaming.domain.Player;
 import nl.qien.gaming.messages.Message;
 import nl.qien.gaming.persistence.BoardgameRepository;
+import org.apache.catalina.webresources.FileResource;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -54,7 +56,8 @@ public class BoardgameEndpoint {
 
     @GET
     @Path("docx")
-    public ResponseEntity<File> generateDocxFile(@Autowired HttpServletRequest request) throws Docx4JException {
+    @Produces(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public Response generateDocxFile() throws Docx4JException {
         WordprocessingMLPackage wordPackage = WordprocessingMLPackage.createPackage();
         MainDocumentPart mainDocumentPart = wordPackage.getMainDocumentPart();
         mainDocumentPart.addStyledParagraphOfText("Title", "Hello World!");
@@ -63,16 +66,18 @@ public class BoardgameEndpoint {
         wordPackage.save(exportFile);
 
         // Try to determine file's content type
-        String contentType = request.getServletContext().getMimeType(exportFile.getAbsolutePath());
+        String contentType = "application/octet-stream";
 
-        // rloman hier straks verder:
-        application/octet-stream
+        Resource r = new FileSystemResource(exportFile);
 
+        return Response.ok(exportFile).build();
+        /*
 
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + exportFile.getName() + "\"")
                 .body(exportFile);
+                */
     }
 
     @POST
