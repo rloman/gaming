@@ -9,21 +9,20 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.Optional;
 
-@Component
-@Path("/boardgames")
+@RestController
+@RequestMapping("api/boardgames")
 public class BoardgameEndpoint {
 
     private static final Logger logger = LoggerFactory.getLogger(BoardgameEndpoint.class);
@@ -31,29 +30,26 @@ public class BoardgameEndpoint {
     @Autowired
     private BoardgameRepository repo;
 
-    @GET
-    public Response list() {
-        return Response.ok(this.repo.findAll()).build();
+    @GetMapping
+    public ResponseEntity<Iterable<Boardgame>> list() {
+        return ResponseEntity.ok(this.repo.findAll());
     }
 
-    @GET
-    @Path("{id}")
-    public Response findById(@PathParam("id") long id) {
+    @GetMapping("{id}")
+    public ResponseEntity<Boardgame> findById(@PathVariable long id) {
         Optional<Boardgame> optionalBoardgame=  this.repo.findById(id);
 
         if(optionalBoardgame.isPresent()) {
             Boardgame boardgame = optionalBoardgame.get();
-            return Response.ok(boardgame).build();
+            return ResponseEntity.ok(boardgame);
         }
         else {
-          return Response.status(Response.Status.NOT_FOUND).build();
+          return ResponseEntity.notFound().build();
         }
     }
 
-    @GET
-    @Path("docx")
-    @Produces(MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public  ResponseEntity<?> generateDocxFile(@Autowired HttpServletRequest request) throws Docx4JException {
+    @GetMapping(value = "docx", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public  ResponseEntity<Resource> generateDocxFile(@Autowired HttpServletRequest request) throws Docx4JException {
         WordprocessingMLPackage wordPackage = WordprocessingMLPackage.createPackage();
         MainDocumentPart mainDocumentPart = wordPackage.getMainDocumentPart();
         mainDocumentPart.addStyledParagraphOfText("Title", "Hello World!");
@@ -62,22 +58,23 @@ public class BoardgameEndpoint {
         wordPackage.save(exportFile);
 
         // Try to determine file's content type
-        String contentType = null;// request.getServletContext().getMimeType(exportFile.getAbsolutePath());
+        String contentType = request.getServletContext().getMimeType(exportFile.getAbsolutePath());
 
         contentType = "application/octet-stream";
+        Resource r = new FileSystemResource(exportFile);
 
 
         return ResponseEntity.ok()
-//                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + exportFile.getName() + "\"")
-                .body(exportFile);
+                .body(r);
     }
 
-    @POST
-    public Response create(Boardgame boardgame) {
+    @PostMapping
+    public ResponseEntity<Boardgame> create(Boardgame boardgame) {
         this.repo.save(boardgame);
 
-        return Response.accepted(boardgame).build();
+        return ResponseEntity.ok(boardgame);
     }
 
 
