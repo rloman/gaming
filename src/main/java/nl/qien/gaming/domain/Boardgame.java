@@ -1,9 +1,6 @@
 package nl.qien.gaming.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -17,6 +14,9 @@ public class Boardgame implements Serializable {
     private String name;
     private int maxPlayers;
     private boolean hasDice;
+
+    @ManyToOne
+    private Producer producer;
 
     public long getId() {
         return id;
