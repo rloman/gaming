@@ -52,7 +52,8 @@ public class BoardgameEndpoint {
 
     @GET
     @Path("docx")
-    public ResponseEntity<File> generateDocxFile(@Autowired HttpServletRequest request) throws Docx4JException {
+    @Produces(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public  ResponseEntity<?> generateDocxFile(@Autowired HttpServletRequest request) throws Docx4JException {
         WordprocessingMLPackage wordPackage = WordprocessingMLPackage.createPackage();
         MainDocumentPart mainDocumentPart = wordPackage.getMainDocumentPart();
         mainDocumentPart.addStyledParagraphOfText("Title", "Hello World!");
@@ -61,14 +62,13 @@ public class BoardgameEndpoint {
         wordPackage.save(exportFile);
 
         // Try to determine file's content type
-        String contentType = request.getServletContext().getMimeType(exportFile.getAbsolutePath());
+        String contentType = null;// request.getServletContext().getMimeType(exportFile.getAbsolutePath());
 
-        // rloman hier straks verder:
-        application/octet-stream
+        contentType = "application/octet-stream";
 
 
         return ResponseEntity.ok()
-                .contentType(MediaType.valueOf(contentType))
+//                .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + exportFile.getName() + "\"")
                 .body(exportFile);
     }
