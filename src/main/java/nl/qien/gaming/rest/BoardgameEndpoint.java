@@ -63,6 +63,9 @@ public class BoardgameEndpoint {
         // Try to determine file's content type
         String contentType = request.getServletContext().getMimeType(exportFile.getAbsolutePath());
 
+        // rloman hier straks verder:
+        application/octet-stream
+
 
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(contentType))
