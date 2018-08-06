@@ -66,6 +66,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+  <!-- Handy dependency to use to create test data; you can use: Faker f = new Faker(); f... -->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>0.15</version>
+        </dependency>
 	</dependencies>
 
 	<build>
