@@ -40,6 +40,13 @@ public class BoardgameEndpoint {
         }
     }
 
+    @POST
+    public Response create(Boardgame boardgame) {
+        this.repo.save(boardgame);
+
+        return Response.accepted(boardgame).build();
+    }
+
 
     @PostConstruct
     public void addSomeTestdata() {
@@ -52,8 +59,6 @@ public class BoardgameEndpoint {
             boardgame.setMaxPlayers(faker.number().numberBetween(0,6));
 
             this.repo.save(boardgame);
-
         }
     }
-    
 }
