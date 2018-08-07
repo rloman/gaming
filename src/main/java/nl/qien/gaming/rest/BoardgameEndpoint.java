@@ -48,9 +48,52 @@ public class BoardgameEndpoint {
     }
 
 
+    // this is for UPDATING a row
+    @PUT
+    @Path("{id}")
+    public Response update(@PathParam("id") long id, Boardgame input) {
+
+        // first fetch the to be updated
+        Optional<Boardgame> optionalToBeUpdated = this.repo.findById(id);
+
+        if(optionalToBeUpdated.isPresent()) {
+
+            Boardgame tobeUpdated = optionalToBeUpdated.get();
+            tobeUpdated.setName(input.getName());
+            tobeUpdated.setHasDice(input.isHasDice());
+            tobeUpdated.setMaxPlayers(input.getMaxPlayers());
+
+            this.repo.save(tobeUpdated); // done
+
+            return Response.accepted(tobeUpdated).build();
+        }
+        else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @DELETE
+    @Path("{id}")
+    public Response deleteById(@PathParam("id") long id) {
+
+        // first fetch the to be deleted
+        Optional<Boardgame> optionalVictim = this.repo.findById(id);
+
+        if(optionalVictim.isPresent()) {
+
+          this.repo.deleteById(id);
+
+            return Response.ok().build();
+        }
+        else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+
     @PostConstruct
     public void addSomeTestdata() {
-        final Faker faker = new Faker();
+        Faker faker = new Faker();
         for(int i = 0;i<5;i++) {
 
             Boardgame boardgame = new Boardgame();
