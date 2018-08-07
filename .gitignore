@@ -1,5 +1,4 @@
 /target/
-nohup.out
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -24,5 +23,7 @@ nohup.out
 /dist/
 /nbdist/
 /.nb-gradle/
+
+## some from R. Loman / NextProgram
 nohup.out
 *.docx
