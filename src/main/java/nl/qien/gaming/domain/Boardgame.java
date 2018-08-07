@@ -2,6 +2,8 @@ package nl.qien.gaming.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Boardgame implements Serializable {
@@ -17,6 +19,14 @@ public class Boardgame implements Serializable {
 
     @ManyToOne
     private Producer producer;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private Set<Player> players = new HashSet<>();
+
+    public void addPlayer(Player p){
+        this.players.add(p);
+        p.getPlayedGames().add(this);
+    }
 
     public long getId() {
         return id;
@@ -44,5 +54,24 @@ public class Boardgame implements Serializable {
 
     public void setHasDice(boolean hasDice) {
         this.hasDice = hasDice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Boardgame boardgame = (Boardgame) o;
+
+        return id == boardgame.id;
+    }
+
+    public Set<Player> getPlayers() {
+        return players;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
     }
 }

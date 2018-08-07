@@ -2,6 +2,7 @@ package nl.qien.gaming.rest;
 
 import com.github.javafaker.Faker;
 import nl.qien.gaming.domain.Boardgame;
+import nl.qien.gaming.domain.Player;
 import nl.qien.gaming.persistence.BoardgameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -100,6 +101,11 @@ public class BoardgameEndpoint {
             boardgame.setName(faker.esports().game());
             boardgame.setHasDice(faker.bool().bool());
             boardgame.setMaxPlayers(faker.number().numberBetween(0,6));
+
+            Player p = new Player();
+            p.setName("Raymie");
+
+            boardgame.addPlayer(p);
 
             this.repo.save(boardgame);
         }
