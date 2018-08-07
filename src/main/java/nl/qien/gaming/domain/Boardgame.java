@@ -22,7 +22,9 @@ public class Boardgame implements Serializable {
     @ManyToOne
     private Producer producer;
 
+    // this annotation prevents the annoying stack overflow (recursive)
     @JsonIgnoreProperties("playedGames")
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Set<Player> players = new HashSet<>();
 
