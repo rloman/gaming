@@ -23,7 +23,7 @@ public class Boardgame implements Serializable {
     private Producer producer;
 
     @JsonIgnoreProperties("playedGames")
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Set<Player> players = new HashSet<>();
 
     public void addPlayer(Player p){

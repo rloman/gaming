@@ -17,7 +17,7 @@ public class Player {
 
 
     @JsonIgnoreProperties("players")
-    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER, mappedBy = "players")
+    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY, mappedBy = "players")
     private Set<Boardgame> playedGames = new HashSet<>();
 
     public void addPlayedGame(Boardgame game) {
