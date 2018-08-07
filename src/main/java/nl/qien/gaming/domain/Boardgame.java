@@ -1,5 +1,7 @@
 package nl.qien.gaming.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -20,6 +22,7 @@ public class Boardgame implements Serializable {
     @ManyToOne
     private Producer producer;
 
+    @JsonIgnoreProperties("playedGames")
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Set<Player> players = new HashSet<>();
 

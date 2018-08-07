@@ -1,5 +1,7 @@
 package nl.qien.gaming.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +16,7 @@ public class Player {
     private String name;
 
 
+    @JsonIgnoreProperties("players")
     @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER, mappedBy = "players")
     private Set<Boardgame> playedGames = new HashSet<>();
 
