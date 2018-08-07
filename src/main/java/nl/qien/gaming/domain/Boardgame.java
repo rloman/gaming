@@ -59,6 +59,10 @@ public class Boardgame implements Serializable {
         this.hasDice = hasDice;
     }
 
+	public Set<Player> getPlayers() {
+        return players;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,10 +71,6 @@ public class Boardgame implements Serializable {
         Boardgame boardgame = (Boardgame) o;
 
         return id == boardgame.id;
-    }
-
-    public Set<Player> getPlayers() {
-        return players;
     }
 
     @Override
