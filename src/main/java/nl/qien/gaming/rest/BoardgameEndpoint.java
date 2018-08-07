@@ -3,6 +3,7 @@ package nl.qien.gaming.rest;
 import com.github.javafaker.Faker;
 import nl.qien.gaming.domain.Boardgame;
 import nl.qien.gaming.domain.Player;
+import nl.qien.gaming.messages.Message;
 import nl.qien.gaming.persistence.BoardgameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -84,7 +85,9 @@ public class BoardgameEndpoint {
 
           this.repo.deleteById(id);
 
-            return Response.ok().build();
+          Message message = new Message(200, "gelukt!");
+
+            return Response.ok(message).build();
         }
         else {
             return Response.status(Response.Status.NOT_FOUND).build();
