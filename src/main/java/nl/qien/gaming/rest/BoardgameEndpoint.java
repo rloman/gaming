@@ -5,7 +5,6 @@ import nl.qien.gaming.domain.Boardgame;
 import nl.qien.gaming.domain.Player;
 import nl.qien.gaming.messages.Message;
 import nl.qien.gaming.persistence.BoardgameRepository;
-import org.apache.catalina.webresources.FileResource;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
@@ -14,13 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.File;
@@ -28,6 +24,8 @@ import java.util.Optional;
 
 @Component
 @Path("/boardgames")
+@Consumes(MediaType.APPLICATION_JSON_VALUE)
+@Produces(MediaType.APPLICATION_JSON_VALUE)
 public class BoardgameEndpoint {
 
     private static final Logger logger = LoggerFactory.getLogger(BoardgameEndpoint.class);
